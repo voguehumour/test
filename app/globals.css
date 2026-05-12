@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #dcdbd2;
+  --color-background-alt: #efede5;
+  --color-accent: #2e3b4a;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #5c5c5a;
+  --color-border: #c7c5bc;
+
+  --font-display: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-sans), "Inter", system-ui, sans-serif;
+
+  --breakpoint-xs: 23.4375rem;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  html,
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.7;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+  }
+
+  ::selection {
+    background-color: rgba(46, 59, 74, 0.18);
+    color: var(--color-text-primary);
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  a {
+    color: inherit;
+  }
+}
+
+@layer components {
+  .container-content {
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .container-narrow {
+    max-width: 720px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .container-form {
+    max-width: 600px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .hairline {
+    height: 1px;
+    background-color: var(--color-border);
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-text-primary);
+    color: var(--color-text-primary);
+    background-color: transparent;
+    padding: 0.875rem 1.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .btn-outline:hover {
+    background-color: var(--color-text-primary);
+    color: var(--color-background);
+  }
+
+  .btn-solid {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-accent);
+    color: #fff;
+    padding: 0.875rem 1.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: opacity 0.25s ease;
+  }
+
+  .btn-solid:hover {
+    opacity: 0.88;
+  }
+
+  .field-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .field-input {
+    width: 100%;
+    background-color: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    padding: 0.875rem 1rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    transition: border-color 0.25s ease;
+  }
+
+  .field-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+
+  /* Subtle, consistent artwork hover - opacity fade */
+  .artwork-tile {
+    transition: opacity 0.4s ease;
+  }
+
+  .artwork-tile:hover {
+    opacity: 0.9;
+  }
+}
