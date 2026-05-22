@@ -5,17 +5,20 @@ import { SITE } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Inquire about a commission, purchase, or other matter — send a private message to Zach Shevlin.",
+    "Get in touch with Gigi Coons of Texas — kitten inquiries, waitlist requests, and general questions are all welcome.",
 };
 
 export default function ContactPage() {
   return (
     <div className="pt-10 md:pt-14 pb-20">
       <div className="container-form text-center mb-10 md:mb-14">
-        <h1 className="font-display text-4xl md:text-5xl">Contact</h1>
-        <p className="mt-4 text-[color:var(--color-text-secondary)]">
-          Commission inquiries, purchase requests, and other correspondence are
-          all welcome.
+        <p className="text-xs uppercase tracking-[0.25em] text-[color:var(--color-text-secondary)] mb-3">
+          Get in Touch
+        </p>
+        <h1 className="font-display text-4xl md:text-5xl">Contact Us</h1>
+        <p className="mt-4 text-[color:var(--color-text-secondary)] leading-relaxed">
+          Kitten inquiries, waitlist requests, and general questions are all
+          welcome. We aim to respond within 48 hours.
         </p>
       </div>
 
@@ -38,7 +41,7 @@ export default function ContactPage() {
               target="_blank"
               rel="noreferrer noopener"
               className="inline-flex items-center gap-2 hover:text-[color:var(--color-text-primary)] transition-colors"
-              aria-label="Zach Shevlin on Instagram"
+              aria-label="Gigi Coons of Texas on Instagram"
             >
               <svg
                 viewBox="0 0 24 24"
