@@ -3,15 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Logo } from "./Logo";
 import { cn } from "@/lib/cn";
 
 const links = [
-  { href: "/artwork", label: "Artwork" },
-  { href: "/commission-process", label: "Commission Process" },
-  { href: "/commission", label: "Commission a Portrait" },
-  { href: "/available", label: "Available Artwork" },
-  { href: "/about", label: "About" },
+  { href: "/about", label: "About Us" },
+  { href: "/maine-coon", label: "The Breed" },
+  { href: "/kittens", label: "Available Kittens" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -19,12 +16,10 @@ export function Navigation() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // Close menu on route change
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
-  // Lock body scroll while menu is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -32,7 +27,6 @@ export function Navigation() {
     };
   }, [open]);
 
-  // Esc closes menu
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -45,8 +39,10 @@ export function Navigation() {
   return (
     <header className="sticky top-0 z-40 border-b border-[color:var(--color-border)] bg-[color:var(--color-background)]/92 backdrop-blur-md">
       <div className="container-content flex items-center justify-between gap-6 py-4 md:py-5">
-        <Link href="/" aria-label="Zach Shevlin — home" className="flex items-center">
-          <Logo className="h-9 w-auto md:h-10" />
+        <Link href="/" aria-label="Gigi Coons of Texas — home" className="flex items-center">
+          <span className="font-display text-xl tracking-[-0.01em]">
+            Gigi Coons <span className="italic">of Texas</span>
+          </span>
         </Link>
 
         <nav aria-label="Primary" className="hidden md:block">
@@ -109,7 +105,6 @@ export function Navigation() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       <div
         id="mobile-menu"
         role="dialog"

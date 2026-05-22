@@ -24,7 +24,7 @@ const sans = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} — Classical Portrait Artist`,
+    default: `${SITE.name} — Maine Coon Cattery`,
     template: `%s · ${SITE.name}`,
   },
   description: SITE.description,
@@ -33,22 +33,13 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE.url,
     siteName: SITE.name,
-    title: `${SITE.name} — Classical Portrait Artist`,
+    title: `${SITE.name} — Maine Coon Cattery`,
     description: SITE.description,
-    images: [
-      {
-        url: "/artwork/portrait-01.svg",
-        width: 1200,
-        height: 1600,
-        alt: "Portrait by Zach Shevlin",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.name} — Classical Portrait Artist`,
+    title: `${SITE.name} — Maine Coon Cattery`,
     description: SITE.description,
-    images: ["/artwork/portrait-01.svg"],
   },
   robots: { index: true, follow: true },
 };
@@ -70,10 +61,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "WebSite",
+              "@type": "LocalBusiness",
               name: SITE.name,
               url: SITE.url,
               description: SITE.description,
+              address: {
+                "@type": "PostalAddress",
+                addressRegion: "TX",
+                addressCountry: "US",
+              },
             }),
           }}
         />

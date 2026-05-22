@@ -1,11 +1,9 @@
 export const SITE = {
-  name: "Zach Shevlin",
-  url: "https://zachshev.com",
-  email: "zach@zachshev.com",
-  // TODO: replace with Zach's Instagram handle
-  instagram: "https://instagram.com/",
-  wattsAtelier: "https://wattsatelier.com",
-  tagline: "Heirloom Portraiture designed to last for generations",
+  name: "Gigi Coons of Texas",
+  url: "https://www.gigicoonsoftexas.com",
+  email: "info@gigicoonsoftexas.com",
+  instagram: "https://instagram.com/gigicoonsoftexas",
+  tagline: "Raising Maine Coons with heart, health, and heritage",
   description:
-    "Zach Shevlin — classical portrait artist based in San Diego, California. Oil paintings, oil sketches, pastel and graphite drawings, and pet portraiture.",
+    "Gigi Coons of Texas — a family-owned, TICA-registered Maine Coon cattery in Texas. Kittens raised with love, health tested, and beautifully socialized.",
 };

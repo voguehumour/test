@@ -7,21 +7,23 @@ import { SITE } from "@/lib/site";
 interface FormState {
   name: string;
   email: string;
+  phone: string;
   subject: string;
   message: string;
 }
 
-const empty: FormState = { name: "", email: "", subject: "", message: "" };
+const empty: FormState = { name: "", email: "", phone: "", subject: "", message: "" };
 
-// Single submission handler. Phase 1: opens user's mail client.
-// Swap this body for a fetch() to Formspree/Resend/etc. later.
 async function handleSubmit(data: FormState) {
   const body = [
     `Name: ${data.name}`,
     `Email: ${data.email}`,
+    data.phone ? `Phone: ${data.phone}` : "",
     "",
     data.message,
-  ].join("\n");
+  ]
+    .filter((line) => line !== undefined)
+    .join("\n");
 
   const url =
     `mailto:${SITE.email}` +
@@ -35,7 +37,6 @@ function ContactFormBody() {
   const params = useSearchParams();
   const [state, setState] = useState<FormState>(empty);
 
-  // Pre-fill subject from URL ?subject=
   useEffect(() => {
     const s = params?.get("subject");
     if (s) setState((prev) => ({ ...prev, subject: s }));
@@ -69,20 +70,36 @@ function ContactFormBody() {
         />
       </div>
 
-      <div>
-        <label htmlFor="email" className="field-label">
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          autoComplete="email"
-          value={state.email}
-          onChange={update("email")}
-          className="field-input"
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label htmlFor="email" className="field-label">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            value={state.email}
+            onChange={update("email")}
+            className="field-input"
+          />
+        </div>
+        <div>
+          <label htmlFor="phone" className="field-label">
+            Phone <span className="normal-case tracking-normal text-[color:var(--color-text-secondary)]">(optional)</span>
+          </label>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            value={state.phone}
+            onChange={update("phone")}
+            className="field-input"
+          />
+        </div>
       </div>
 
       <div>
@@ -96,6 +113,7 @@ function ContactFormBody() {
           value={state.subject}
           onChange={update("subject")}
           className="field-input"
+          placeholder="e.g. Kitten inquiry, Waitlist, General question"
         />
       </div>
 
@@ -116,7 +134,7 @@ function ContactFormBody() {
 
       <div className="pt-2">
         <button type="submit" className="btn-solid">
-          Send message
+          Send Message
         </button>
       </div>
     </form>
