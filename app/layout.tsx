@@ -1,57 +1,49 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
-import Script from "next/script";
+import { Fraunces, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
-import { SITE } from "@/lib/site";
+import Cursor from "@/components/cursor/Cursor";
+import SmoothScroll from "@/components/SmoothScroll";
+import AINetwork from "@/components/network/AINetwork";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import TouchRipple from "@/components/cursor/TouchRipple";
 
-const display = Cormorant_Garamond({
+const display = Fraunces({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
+  axes: ["opsz", "SOFT"],
 });
 
-const sans = Inter({
+const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-sans",
+  variable: "--font-mono-face",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
+  metadataBase: new URL("https://animeshjaiswal.com"),
   title: {
-    default: `${SITE.name} — Classical Portrait Artist`,
-    template: `%s · ${SITE.name}`,
+    default: "Animesh Jaiswal — AI consultant",
+    template: "%s — Animesh Jaiswal",
   },
-  description: SITE.description,
-  alternates: { canonical: "/" },
+  description:
+    "AI consultant who can design and ship the prototype himself. I help teams ship intelligent products that actually work.",
   openGraph: {
+    title: "Animesh Jaiswal — AI consultant",
+    description:
+      "Thinks clearly about AI, then builds the thing. Consultant, product designer, creative engineer.",
     type: "website",
-    url: SITE.url,
-    siteName: SITE.name,
-    title: `${SITE.name} — Classical Portrait Artist`,
-    description: SITE.description,
-    images: [
-      {
-        url: "/artwork/portrait-01.svg",
-        width: 1200,
-        height: 1600,
-        alt: "Portrait by Zach Shevlin",
-      },
-    ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: `${SITE.name} — Classical Portrait Artist`,
-    description: SITE.description,
-    images: ["/artwork/portrait-01.svg"],
-  },
-  robots: { index: true, follow: true },
 };
+
+const themeScript = `
+(function(){try{
+  var t = localStorage.getItem('theme');
+  if(!t){ t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; }
+  document.documentElement.setAttribute('data-theme', t);
+}catch(e){ document.documentElement.setAttribute('data-theme','dark'); }})();
+`;
 
 export default function RootLayout({
   children,
@@ -59,24 +51,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable}`}>
-      <body className="min-h-screen flex flex-col">
-        <Navigation />
-        <main className="flex-1">{children}</main>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className={`${display.variable} ${mono.variable}`}>
+        <div className="grain" aria-hidden />
+        <SmoothScroll />
+        <AINetwork />
+        <Cursor />
+        <TouchRipple />
+        <Header />
+        <main id="top">{children}</main>
         <Footer />
-        <Script
-          id="ld-website"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: SITE.name,
-              url: SITE.url,
-              description: SITE.description,
-            }),
-          }}
-        />
       </body>
     </html>
   );

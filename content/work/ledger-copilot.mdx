@@ -1,0 +1,50 @@
+---
+title: A copilot that books itself
+client: Fintech, Series B
+year: "2025"
+image: /work/ledger.svg
+---
+
+<Lede>
+A finance team was losing three days a month to reconciliation. We didn't build an
+"AI for finance" platform. We found the one task an LLM could do safely, wrapped it
+in approvals, and shipped it in three weeks.
+</Lede>
+
+The brief arrived the way these always do: *"can AI do our reconciliation?"* The honest
+answer is *some of it, and only if a human stays in the loop.* So the first week was not
+engineering. It was sitting with the team, watching where the time actually went, and
+drawing a sharp line between the parts where a model helps and the parts where it
+quietly invents numbers.
+
+## Where the model earns its place
+
+Matching transactions to entries is pattern work — the model is good at it. *Deciding*
+that a match is correct is judgment, and judgment stays with the accountant. We built the
+copilot to draft, never to commit. Every entry it proposes carries its evidence, and a
+human approves it in a single click.
+
+<Metrics items={[
+  { value: "71", label: "% reconciliation time cut" },
+  { value: "3", label: "weeks to first ship" },
+  { value: "0", label: "hallucinated entries in production" }
+]} />
+
+<Pull>The interesting demo and the useful product are rarely the same thing.</Pull>
+
+## What shipped
+
+A retrieval layer over the ledger, a constrained generation step that can only emit
+entries in the firm's chart of accounts, and an evaluation harness the team runs every
+week against a frozen set of historical months. The evals are the real deliverable — they
+are how the team keeps trusting the thing after I left.
+
+<Frame src="/work/ledger.svg" caption="The approval surface: every drafted entry shows its source transactions." />
+
+<Aside>
+The hardest design problem wasn't the model. It was making *rejecting* a suggestion feel
+as fast as accepting one, so the accountant never felt the tool was arguing with them.
+</Aside>
+
+By the end, the team wasn't asking whether AI could do reconciliation. They were asking
+what the next boring outcome worth automating was. That's the engagement working.

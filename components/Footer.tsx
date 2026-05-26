@@ -1,37 +1,37 @@
-import Link from "next/link";
-import { Logo } from "./Logo";
-import { SITE } from "@/lib/site";
+"use client";
 
-export function Footer() {
-  const year = new Date().getFullYear();
+const year = new Date().getFullYear();
+
+export default function Footer() {
+  const toTop = () => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return window.scrollTo(0, 0);
+    const start = window.scrollY;
+    const dur = Math.min(1600, start * 0.6);
+    const t0 = performance.now();
+    const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+    const step = (now: number) => {
+      const p = Math.min(1, (now - t0) / (dur || 1));
+      window.scrollTo(0, start * (1 - ease(p)));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
   return (
-    <footer className="border-t border-[color:var(--color-border)] mt-24">
-      <div className="container-content py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <Logo className="h-7 w-auto opacity-90" />
-        </div>
-
-        <p className="text-sm text-[color:var(--color-text-secondary)]">
-          © {year} Zach Shevlin
-        </p>
-
-        <div className="flex items-center gap-6 text-sm">
-          <a
-            href={SITE.instagram}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="text-[color:var(--color-text-secondary)] hover:text-[color:var(--color-text-primary)] transition-colors"
-          >
-            Instagram
-          </a>
-          <Link
-            href={`mailto:${SITE.email}`}
-            className="text-[color:var(--color-text-secondary)] hover:text-[color:var(--color-text-primary)] transition-colors"
-          >
-            {SITE.email}
-          </Link>
-        </div>
-      </div>
+    <footer className="flex items-center justify-between px-[var(--gutter)] py-6 border-t border-hairline">
+      <span className="font-mono text-step--1 text-fg-dim">
+        © {year} Animesh Jaiswal
+      </span>
+      <button
+        onClick={toTop}
+        data-cursor="link"
+        data-cursor-label="top"
+        aria-label="Back to top"
+        className="font-mono text-step--1 text-fg-dim transition-colors duration-200 hover:text-accent"
+      >
+        ↑
+      </button>
     </footer>
   );
 }
