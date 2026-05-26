@@ -24,11 +24,11 @@ that a match is correct is judgment, and judgment stays with the accountant. We 
 copilot to draft, never to commit. Every entry it proposes carries its evidence, and a
 human approves it in a single click.
 
-<Metrics items={[
-  { value: "71", label: "% reconciliation time cut" },
-  { value: "3", label: "weeks to first ship" },
-  { value: "0", label: "hallucinated entries in production" }
-]} />
+<Metrics>
+  <Metric value="71" label="% reconciliation time cut" />
+  <Metric value="3" label="weeks to first ship" />
+  <Metric value="0" label="hallucinated entries in production" />
+</Metrics>
 
 <Pull>The interesting demo and the useful product are rarely the same thing.</Pull>
 

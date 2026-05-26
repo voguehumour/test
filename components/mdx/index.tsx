@@ -15,24 +15,24 @@ export function Stack({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-col gap-8 my-8">{children}</div>;
 }
 
-export function Metrics({
-  items,
-}: {
-  items: { value: string; label: string }[];
-}) {
+export function Metrics({ children }: { children: React.ReactNode }) {
   return (
     <dl className="flex flex-wrap gap-x-12 gap-y-6 my-12 border-y border-hairline py-8">
-      {items.map((m) => (
-        <div key={m.label}>
-          <dt className="font-mono text-step-2 text-fg">
-            <CountUp value={m.value} />
-          </dt>
-          <dd className="font-mono text-step--1 text-fg-dim mt-1 max-w-[18ch]">
-            {m.label}
-          </dd>
-        </div>
-      ))}
+      {children}
     </dl>
+  );
+}
+
+export function Metric({ value, label }: { value: string; label: string }) {
+  return (
+    <div>
+      <dt className="font-mono text-step-2 text-fg">
+        <CountUp value={value} />
+      </dt>
+      <dd className="font-mono text-step--1 text-fg-dim mt-1 max-w-[18ch]">
+        {label}
+      </dd>
+    </div>
   );
 }
 
@@ -82,6 +82,7 @@ export const mdxComponents = {
   Lede,
   Stack,
   Metrics,
+  Metric,
   Frame,
   Pull,
   Aside,
