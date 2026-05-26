@@ -1,157 +1,264 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
-@theme {
-  --color-background: #dcdbd2;
-  --color-background-alt: #efede5;
-  --color-accent: #2e3b4a;
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #5c5c5a;
-  --color-border: #c7c5bc;
+/*
+  Map design tokens into Tailwind v4's theme so utilities resolve to the
+  token layer — there is no default palette reaching production CSS.
+*/
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-raise: var(--bg-raise);
+  --color-fg: var(--fg);
+  --color-fg-dim: var(--fg-dim);
+  --color-fg-faint: var(--fg-faint);
+  --color-accent: var(--accent);
+  --color-hairline: var(--hairline);
 
-  --font-display: var(--font-display), "Cormorant Garamond", Georgia, serif;
-  --font-sans: var(--font-sans), "Inter", system-ui, sans-serif;
+  --font-serif: var(--font-display), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", monospace;
 
-  --breakpoint-xs: 23.4375rem;
+  --text-step--1: var(--step--1);
+  --text-step-0: var(--step-0);
+  --text-step-1: var(--step-1);
+  --text-step-2: var(--step-2);
+  --text-step-3: var(--step-3);
+  --text-step-4: var(--step-4);
+  --text-step-5: var(--step-5);
+
+  --ease-house: var(--ease-house);
 }
 
 @layer base {
   :root {
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
     color-scheme: light;
   }
 
   html {
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
-  html,
   body {
-    background-color: var(--color-background);
-    color: var(--color-text-primary);
-    font-family: var(--font-sans);
-    line-height: 1.7;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.55;
+    transition: background var(--dur-section) var(--ease-house),
+      color var(--dur-section) var(--ease-house);
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: var(--font-display);
-    line-height: 1.2;
-    letter-spacing: -0.005em;
+  /* The custom cursor takes over on fine-pointer, motion-OK devices. */
+  @media (pointer: fine) {
+    :root:not([data-reduced]) * {
+      cursor: none;
+    }
   }
 
   ::selection {
-    background-color: rgba(46, 59, 74, 0.18);
-    color: var(--color-text-primary);
+    background: var(--accent-soft);
+    color: var(--fg);
   }
 
-  *:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 3px;
+  /* Designed focus rings — never the browser default. */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
     border-radius: 2px;
   }
 
   a {
     color: inherit;
+    text-decoration: none;
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
   }
 }
 
-@layer components {
-  .container-content {
-    max-width: 1280px;
-    margin-inline: auto;
-    padding-inline: 1.5rem;
+/* --- Route transitions via the View Transitions API where supported.
+   Shared elements (wordmark, case-study image) carry view-transition-name
+   inline. Browsers without support simply navigate — graceful fallback. --- */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
+}
 
-  .container-narrow {
-    max-width: 720px;
-    margin-inline: auto;
-    padding-inline: 1.5rem;
-  }
+/* --- Animated SVG grain. Single overlay, ~4% opacity, slow 4s drift. --- */
+.grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: var(--z-grain);
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-drift 4s steps(6) infinite;
+  mix-blend-mode: overlay;
+}
+@keyframes grain-drift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -4%); }
+  60% { transform: translate(-3%, -2%); }
+  80% { transform: translate(2%, 4%); }
+  100% { transform: translate(0, 0); }
+}
 
-  .container-form {
-    max-width: 600px;
-    margin-inline: auto;
-    padding-inline: 1.5rem;
-  }
+/* --- Line-mask reveal primitive (overflow-hidden + translateY from 100%) --- */
+.line-mask {
+  display: block;
+  overflow: hidden;
+}
+.line-mask > span {
+  display: block;
+  transform: translateY(110%);
+}
 
-  .hairline {
-    height: 1px;
-    background-color: var(--color-border);
-  }
+/* --- Custom cursor --- */
+.cursor-dot,
+.cursor-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  border-radius: 999px;
+  will-change: transform;
+}
+.cursor-dot {
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+  transition: width var(--dur-micro) var(--ease-house),
+    height var(--dur-micro) var(--ease-house),
+    background var(--dur-micro) var(--ease-house),
+    border-radius var(--dur-micro) var(--ease-house);
+}
+.cursor-trail {
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  opacity: 0.3;
+  filter: blur(1px);
+}
+/* difference blend lives only on the default state, against the dark bg */
+.cursor-dot[data-state="default"] {
+  mix-blend-mode: difference;
+}
+:root[data-theme="light"] .cursor-dot[data-state="default"] {
+  mix-blend-mode: normal;
+}
+.cursor-dot[data-state="text"] {
+  width: 2px;
+  height: 22px;
+  border-radius: 1px;
+}
+.cursor-dot[data-state="link"] {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--accent);
+}
+.cursor-dot[data-state="network"] {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: 1px solid var(--accent);
+}
+.cursor-dot[data-state="network"]::after {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+.cursor-dot[data-state="active"] {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.cursor-label {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity var(--dur-micro) var(--ease-house);
+}
+.cursor-dot[data-state="link"] .cursor-label {
+  opacity: 1;
+}
+/* network's persistent trail is too busy at link/network scale */
+.cursor-dot[data-state="link"] ~ .cursor-trail,
+.cursor-dot[data-state="network"] ~ .cursor-trail {
+  opacity: 0;
+}
 
-  .btn-outline {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--color-text-primary);
-    color: var(--color-text-primary);
-    background-color: transparent;
-    padding: 0.875rem 1.75rem;
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    transition: background-color 0.25s ease, color 0.25s ease;
-  }
+/* Touch tap ripple (replaces the cursor on touch devices). */
+.tap-ripple {
+  position: fixed;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  pointer-events: none;
+  z-index: var(--z-cursor);
+  transform: translate(-50%, -50%);
+  animation: tap 0.32s var(--ease-house) forwards;
+}
+@keyframes tap {
+  from { width: 0; height: 0; opacity: 0.8; }
+  to { width: 80px; height: 80px; opacity: 0; }
+}
 
-  .btn-outline:hover {
-    background-color: var(--color-text-primary);
-    color: var(--color-background);
+/* --- Reduced motion: opacity-only, 240ms. Beautiful, not a stripped apology. --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.24s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.24s !important;
+    scroll-behavior: auto !important;
   }
+  .grain {
+    animation: none;
+  }
+  .line-mask > span {
+    transform: none;
+  }
+}
 
-  .btn-solid {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--color-accent);
-    color: #fff;
-    padding: 0.875rem 1.75rem;
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    transition: opacity 0.25s ease;
-  }
-
-  .btn-solid:hover {
-    opacity: 0.88;
-  }
-
-  .field-label {
-    display: block;
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-secondary);
-    margin-bottom: 0.5rem;
-  }
-
-  .field-input {
-    width: 100%;
-    background-color: var(--color-background-alt);
-    border: 1px solid var(--color-border);
-    padding: 0.875rem 1rem;
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    color: var(--color-text-primary);
-    transition: border-color 0.25s ease;
-  }
-
-  .field-input:focus {
-    outline: none;
-    border-color: var(--color-accent);
-  }
-
-  /* Subtle, consistent artwork hover - opacity fade */
-  .artwork-tile {
-    transition: opacity 0.4s ease;
-  }
-
-  .artwork-tile:hover {
-    opacity: 0.9;
-  }
+/* The /reduced-motion-preview route forces the same baseline via data-reduced. */
+:root[data-reduced] *,
+:root[data-reduced] *::before,
+:root[data-reduced] *::after {
+  animation-duration: 0.24s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.24s !important;
+  scroll-behavior: auto !important;
+}
+:root[data-reduced] .grain {
+  animation: none;
+}
+:root[data-reduced] .line-mask > span {
+  transform: none !important;
 }

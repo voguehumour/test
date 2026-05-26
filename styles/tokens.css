@@ -1,0 +1,77 @@
+/*
+  tokens.css — the single source of truth for the visual system.
+  Every color, type step, spacing value, and motion constant lives here.
+  Nothing in the app should hardcode a hex value or a duration.
+*/
+
+:root {
+  /* --- Color: dark is default (late-night studio) --- */
+  --bg: #0b0b0c;
+  --bg-raise: #121214; /* barely-there elevation, used for the corner module plate */
+  --fg: #e8e6e1; /* warm off-white, never pure white */
+  --fg-dim: #9a9892; /* secondary text */
+  --fg-faint: #5e5d59; /* tertiary / disabled */
+  --hairline: rgba(232, 230, 225, 0.08); /* 1px rules live at 8% */
+
+  /* The one accent. A treated coral / sodium-lamp orange.
+     Sampled warm, slightly desaturated — never a tailwind default. */
+  --accent: #d96a44;
+  --accent-soft: rgba(217, 106, 68, 0.16);
+  --accent-glow: rgba(217, 106, 68, 0.55);
+
+  /* WebGL reads these as 0–1 vec3 (kept in sync with the hex above). */
+  --net-node: 0.886, 0.882, 0.866; /* fg */
+  --net-accent: 0.851, 0.416, 0.267; /* accent */
+  --net-bg: 0.043, 0.043, 0.047; /* bg */
+
+  /* --- Type scale (fluid, declarative at the top) --- */
+  --step--1: clamp(0.78rem, 0.74rem + 0.2vw, 0.86rem);
+  --step-0: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  --step-1: clamp(1.18rem, 1.05rem + 0.6vw, 1.5rem);
+  --step-2: clamp(1.6rem, 1.3rem + 1.4vw, 2.4rem);
+  --step-3: clamp(2.2rem, 1.6rem + 3vw, 3.8rem);
+  --step-4: clamp(3rem, 2rem + 5vw, 6rem);
+  --step-5: clamp(3.6rem, 2.2rem + 7vw, 8.5rem);
+
+  /* --- Spacing (8px base rhythm) --- */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --space-6: 6.5rem;
+  --space-7: 10rem;
+
+  --gutter: 24px;
+  --measure: 68ch;
+
+  /* --- Motion: pacing is the credibility signal --- */
+  --ease-house: cubic-bezier(0.22, 1, 0.36, 1); /* the one fade ease */
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --dur-micro: 0.2s;
+  --dur-exit: 0.22s;
+  --dur-enter: 0.6s;
+  --dur-section: 0.95s;
+
+  --z-grain: 60;
+  --z-cursor: 90;
+  --z-corner-net: 70;
+  --z-header: 50;
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f2ec; /* warm paper */
+  --bg-raise: #ffffff;
+  --fg: #1a1916;
+  --fg-dim: #56544e;
+  --fg-faint: #8d8a82;
+  --hairline: rgba(26, 25, 22, 0.1);
+
+  --accent: #c2502f; /* slightly deeper so it holds AA on paper */
+  --accent-soft: rgba(194, 80, 47, 0.12);
+  --accent-glow: rgba(194, 80, 47, 0.4);
+
+  --net-node: 0.1, 0.098, 0.086;
+  --net-accent: 0.76, 0.314, 0.184;
+  --net-bg: 0.956, 0.949, 0.925;
+}

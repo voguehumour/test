@@ -1,6 +1,6 @@
 {
-  "name": "zachshev",
-  "version": "1.0.0",
+  "name": "animesh-jaiswal-portfolio",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,17 +9,27 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
     "clsx": "^2.1.1",
-    "next": "15.0.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.18",
+    "motion": "^11.15.0",
+    "next": "^16.2.6",
+    "next-mdx-remote": "^6.0.0",
+    "postprocessing": "^6.36.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.171.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.0.0-beta.6",
+    "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.9.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "tailwindcss": "^4.0.0-beta.6",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.171.0",
+    "raw-loader": "^4.0.2",
+    "tailwindcss": "^4.0.0",
     "typescript": "^5.6.3"
   }
 }

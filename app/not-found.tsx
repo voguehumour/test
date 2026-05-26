@@ -2,21 +2,19 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="container-narrow py-24 md:py-32 text-center">
-      <p className="text-xs uppercase tracking-[0.25em] text-[color:var(--color-text-secondary)]">
-        404
-      </p>
-      <h1 className="mt-4 font-display text-4xl md:text-5xl">
-        Page not found
+    <div className="min-h-[80svh] flex flex-col justify-center px-[var(--gutter)]">
+      <p className="font-mono text-step--1 text-accent">404</p>
+      <h1 className="mt-4 font-serif text-step-4 tracking-tight max-w-[16ch]">
+        Nothing lives here.
       </h1>
-      <p className="mt-4 text-[color:var(--color-text-secondary)]">
-        The page you requested could not be found.
-      </p>
-      <div className="mt-8">
-        <Link href="/" className="btn-outline">
-          Return home
-        </Link>
-      </div>
+      <Link
+        href="/"
+        data-cursor="link"
+        data-cursor-label="home"
+        className="mt-8 font-mono text-step--1 text-fg-dim hover:text-accent transition-colors"
+      >
+        ← back home
+      </Link>
     </div>
   );
 }
