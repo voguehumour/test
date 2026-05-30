@@ -1,56 +1,41 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
-import Script from "next/script";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
-import { SITE } from "@/lib/site";
+import Header from "@/components/Header";
 
-const display = Cormorant_Garamond({
+const display = Fraunces({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
+  variable: "--font-display-face",
   display: "swap",
+  axes: ["opsz", "SOFT"],
 });
 
 const sans = Inter({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-sans",
+  variable: "--font-body-face",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono-face",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
+  metadataBase: new URL("https://animeshjaiswal.com"),
   title: {
-    default: `${SITE.name} — Classical Portrait Artist`,
-    template: `%s · ${SITE.name}`,
+    default: "Animesh Jaiswal — AI Consultant",
+    template: "%s — Animesh Jaiswal",
   },
-  description: SITE.description,
-  alternates: { canonical: "/" },
+  description:
+    "Animesh Jaiswal is an AI consultant who helps companies design, build, and ship AI products that actually work — from strategy to production.",
   openGraph: {
+    title: "Animesh Jaiswal — AI Consultant",
+    description:
+      "I help companies build with AI — strategy, custom models, and production systems.",
     type: "website",
-    url: SITE.url,
-    siteName: SITE.name,
-    title: `${SITE.name} — Classical Portrait Artist`,
-    description: SITE.description,
-    images: [
-      {
-        url: "/artwork/portrait-01.svg",
-        width: 1200,
-        height: 1600,
-        alt: "Portrait by Zach Shevlin",
-      },
-    ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: `${SITE.name} — Classical Portrait Artist`,
-    description: SITE.description,
-    images: ["/artwork/portrait-01.svg"],
-  },
-  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -59,24 +44,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable}`}>
-      <body className="min-h-screen flex flex-col">
-        <Navigation />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <Script
-          id="ld-website"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: SITE.name,
-              url: SITE.url,
-              description: SITE.description,
-            }),
-          }}
-        />
+    <html lang="en">
+      <body
+        className={`${display.variable} ${sans.variable} ${mono.variable} antialiased`}
+      >
+        <div className="grain" aria-hidden />
+        <div className="vignette" aria-hidden />
+        <Header />
+        <main id="top">{children}</main>
       </body>
     </html>
   );
