@@ -35,14 +35,17 @@ export default function Header() {
       className={cn(
         "fixed inset-x-0 top-0 z-[50] transition-all duration-500",
         scrolled
-          ? "border-b border-hairline bg-bg/70 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+          ? "border-b border-hairline bg-bg/70 text-fg backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent",
+        // The hero and Services panel are light, so use dark text when the
+        // bar is transparent; the dark blur on scroll flips it back to light.
+        !scrolled && (open ? "text-fg" : "text-neutral-900")
       )}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-4 sm:px-8 md:py-5">
         {/* Wordmark */}
         <a href="#top" className="group flex items-center gap-3">
-          <span className="font-display text-[1.15rem] font-semibold leading-none tracking-tight text-fg">
+          <span className="font-display text-[1.15rem] font-semibold leading-none tracking-tight text-current">
             Animesh Jaiswal
           </span>
           <span className="hidden font-mono text-[0.6rem] uppercase tracking-[0.28em] text-accent sm:inline">
@@ -56,7 +59,7 @@ export default function Header() {
             <a
               key={link.href}
               href={link.href}
-              className="relative text-sm text-fg-dim transition-colors hover:text-fg"
+              className="relative text-sm text-current opacity-70 transition-opacity hover:opacity-100"
             >
               <span className="after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">
                 {link.label}
@@ -65,7 +68,7 @@ export default function Header() {
           ))}
           <a
             href="#contact"
-            className="rounded-full border border-accent/40 bg-accent/10 px-5 py-2 text-sm font-medium text-fg transition-colors hover:bg-accent/20"
+            className="rounded-full border border-accent/40 bg-accent/10 px-5 py-2 text-sm font-medium text-current transition-colors hover:bg-accent/20"
           >
             Book a Consultation
           </a>
@@ -80,15 +83,15 @@ export default function Header() {
         >
           <motion.span
             animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-            className="block h-px w-6 bg-fg"
+            className="block h-px w-6 bg-current"
           />
           <motion.span
             animate={open ? { opacity: 0 } : { opacity: 1 }}
-            className="block h-px w-6 bg-fg"
+            className="block h-px w-6 bg-current"
           />
           <motion.span
             animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-            className="block h-px w-6 bg-fg"
+            className="block h-px w-6 bg-current"
           />
         </button>
       </div>

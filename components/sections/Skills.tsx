@@ -1,42 +1,54 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Reveal from "@/components/ui/Reveal";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import type { Category } from "./SkillsPhysics";
 
 // Load the Matter.js physics canvas on the client only — Gravity pulls in
 // svg-path-commander and poly-decomp, which expect a browser environment.
-const SkillsPhysics = dynamic(() => import("./SkillsPhysics"), {
-  ssr: false,
-});
+const SkillsPhysics = dynamic(() => import("./SkillsPhysics"), { ssr: false });
+
+const TABS: { id: Category; label: string }[] = [
+  { id: "core", label: "Core Capabilities" },
+  { id: "stacks", label: "Tech Stacks" },
+  { id: "services", label: "Services" },
+];
 
 export default function Skills() {
+  const [tab, setTab] = useState<Category>("services");
+
   return (
     <section
       id="services"
-      className="relative w-full overflow-hidden border-y border-hairline bg-bg py-20 md:py-28"
+      className="relative flex min-h-screen w-full flex-col overflow-hidden bg-white"
     >
-      <div className="mx-auto mb-10 max-w-[1400px] px-5 sm:px-8 md:mb-14">
-        <Reveal>
-          <p className="font-mono text-xs uppercase tracking-[0.28em] text-accent">
-            What I bring
-          </p>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-fg md:text-6xl">
-            Skills &amp; Services
-          </h2>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <p className="mt-4 max-w-xl text-fg-dim">
-            Grab them, throw them around. Everything I use to take an AI idea
-            from a napkin sketch to something running in production.
-          </p>
-        </Reveal>
+      <h2 className="sr-only">Skills and Services</h2>
+
+      {/* Category tabs */}
+      <div className="z-20 flex items-center justify-center gap-4 px-5 pb-6 pt-28 sm:gap-8 md:pt-32">
+        {TABS.map((t) => {
+          const active = t.id === tab;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={cn(
+                "font-mono text-[0.6rem] uppercase tracking-[0.2em] transition-colors sm:text-xs",
+                active
+                  ? "text-neutral-900"
+                  : "text-neutral-400 hover:text-neutral-600"
+              )}
+            >
+              {active ? `( ${t.label} )` : t.label}
+            </button>
+          );
+        })}
       </div>
 
-      {/* Full-bleed physics playground */}
-      <div className="relative h-[70vh] min-h-[520px] w-full">
-        <SkillsPhysics />
+      {/* Full-bleed physics playground. Remounting on tab change re-drops the chips. */}
+      <div className="relative flex-1">
+        <SkillsPhysics key={tab} category={tab} />
       </div>
     </section>
   );

@@ -3,79 +3,108 @@
 import { Gravity, MatterBody } from "@/components/Gravity";
 import { cn } from "@/lib/utils";
 
-type Chip = {
-  label: string;
-  x: string;
-  y: number;
-  angle?: number;
-  variant: "skill" | "skillAccent" | "service";
+export type Category = "core" | "stacks" | "services";
+
+// Reference palette: periwinkle, pink, teal-green, grey, amber-orange.
+const COLORS = ["#7c83f3", "#f3a0c0", "#3aa991", "#c6c6c6", "#f0a868"];
+
+type Item = { label: string; emoji?: boolean };
+
+const DATA: Record<Category, Item[]> = {
+  core: [
+    { label: "LLM Strategy" },
+    { label: "RAG Pipelines" },
+    { label: "Fine-Tuning" },
+    { label: "Prompt Engineering" },
+    { label: "Agentic Workflows" },
+    { label: "MLOps" },
+    { label: "Data Strategy" },
+    { label: "Computer Vision" },
+    { label: "NLP" },
+    { label: "🧠", emoji: true },
+    { label: "🤖", emoji: true },
+    { label: "🔮", emoji: true },
+    { label: "⚙️", emoji: true },
+  ],
+  stacks: [
+    { label: "Python" },
+    { label: "LangChain" },
+    { label: "Vector DBs" },
+    { label: "PyTorch" },
+    { label: "Hugging Face" },
+    { label: "OpenAI" },
+    { label: "LlamaIndex" },
+    { label: "Pinecone" },
+    { label: "Docker" },
+    { label: "🐍", emoji: true },
+    { label: "⚡", emoji: true },
+    { label: "🦜", emoji: true },
+    { label: "🤗", emoji: true },
+  ],
+  services: [
+    { label: "AI Strategy Consulting" },
+    { label: "Custom Model Development" },
+    { label: "AI Integration" },
+    { label: "Team Training" },
+    { label: "Proof-of-Concept Builds" },
+    { label: "AI Audits" },
+    { label: "Model Evaluation" },
+    { label: "Workshops" },
+    { label: "🚀", emoji: true },
+    { label: "🎯", emoji: true },
+    { label: "✨", emoji: true },
+    { label: "👨‍💻", emoji: true },
+    { label: "👀", emoji: true },
+  ],
 };
 
-// Smaller neutral chips for skills, larger accent chips for services.
-const CHIPS: Chip[] = [
-  // Services (accent, slightly larger)
-  { label: "AI Strategy Consulting", x: "28%", y: -40, angle: -6, variant: "service" },
-  { label: "Custom Model Development", x: "62%", y: -120, angle: 5, variant: "service" },
-  { label: "AI Integration", x: "45%", y: -220, angle: -3, variant: "service" },
-  { label: "Team Training", x: "18%", y: -300, angle: 8, variant: "service" },
-  { label: "Proof-of-Concept Builds", x: "74%", y: -360, angle: -7, variant: "service" },
+// Spread starting positions across the upper area; chips fall and pile up.
+const XS = ["8%", "22%", "36%", "50%", "64%", "78%", "92%", "15%", "30%", "45%", "60%", "75%", "88%"];
 
-  // Skills (neutral / outline)
-  { label: "LLM Strategy", x: "10%", y: 0, angle: 10, variant: "skillAccent" },
-  { label: "RAG Pipelines", x: "38%", y: -60, angle: -10, variant: "skill" },
-  { label: "Fine-Tuning", x: "55%", y: -10, angle: 4, variant: "skill" },
-  { label: "Prompt Engineering", x: "80%", y: -40, angle: -8, variant: "skillAccent" },
-  { label: "Agentic Workflows", x: "25%", y: -150, angle: 6, variant: "skill" },
-  { label: "MLOps", x: "68%", y: -200, angle: -4, variant: "skill" },
-  { label: "Data Strategy", x: "48%", y: -320, angle: 9, variant: "skillAccent" },
-  { label: "Computer Vision", x: "85%", y: -260, angle: -6, variant: "skill" },
-  { label: "NLP", x: "14%", y: -200, angle: 12, variant: "skill" },
-  { label: "Python", x: "60%", y: -420, angle: -10, variant: "skill" },
-  { label: "LangChain", x: "33%", y: -440, angle: 7, variant: "skillAccent" },
-  { label: "Vector DBs", x: "78%", y: -480, angle: -5, variant: "skill" },
-];
-
-function chipClass(variant: Chip["variant"]) {
-  switch (variant) {
-    case "service":
-      return "bg-accent text-bg border border-accent px-5 py-2.5 text-sm md:text-base font-medium shadow-[0_8px_30px_rgba(217,106,68,0.35)]";
-    case "skillAccent":
-      return "bg-accent/10 text-accent border border-accent/40 px-4 py-2 text-xs md:text-sm font-medium";
-    default:
-      return "bg-white/[0.04] text-fg border border-hairline px-4 py-2 text-xs md:text-sm font-medium";
-  }
+function layout(i: number) {
+  return {
+    x: XS[i % XS.length],
+    y: 20 + ((i * 53) % 340),
+    angle: ((i * 37) % 24) - 12,
+  };
 }
 
-export default function SkillsPhysics() {
+export default function SkillsPhysics({ category }: { category: Category }) {
+  const items = DATA[category];
+
   return (
-    <Gravity
-      gravity={{ x: 0, y: 1 }}
-      grabCursor
-      addTopWall
-      className="z-10"
-    >
-      {CHIPS.map((chip) => (
-        <MatterBody
-          key={chip.label}
-          x={chip.x}
-          y={chip.y}
-          angle={chip.angle}
-          matterBodyOptions={{
-            friction: 0.4,
-            restitution: 0.25,
-            density: 0.002,
-          }}
-        >
-          <div
-            className={cn(
-              "select-none whitespace-nowrap rounded-full backdrop-blur-sm",
-              chipClass(chip.variant)
-            )}
+    <Gravity gravity={{ x: 0, y: 1 }} grabCursor addTopWall className="z-10">
+      {items.map((item, i) => {
+        const color = COLORS[i % COLORS.length];
+        const { x, y, angle } = layout(i);
+
+        return (
+          <MatterBody
+            key={`${category}-${item.label}`}
+            x={x}
+            y={y}
+            angle={angle}
+            bodyType={item.emoji ? "circle" : "rectangle"}
+            matterBodyOptions={{ friction: 0.4, restitution: 0.3, density: 0.002 }}
           >
-            {chip.label}
-          </div>
-        </MatterBody>
-      ))}
+            {item.emoji ? (
+              <div
+                className="flex h-12 w-12 select-none items-center justify-center rounded-full text-2xl shadow-md md:h-16 md:w-16 md:text-3xl"
+                style={{ backgroundColor: color }}
+              >
+                {item.label}
+              </div>
+            ) : (
+              <div
+                className="select-none whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium text-white shadow-md sm:px-5 sm:py-2.5 sm:text-xl md:px-7 md:py-3 md:text-3xl"
+                style={{ backgroundColor: color }}
+              >
+                {item.label}
+              </div>
+            )}
+          </MatterBody>
+        );
+      })}
     </Gravity>
   );
 }
