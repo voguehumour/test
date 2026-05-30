@@ -12,9 +12,11 @@
   --color-fg-dim: var(--fg-dim);
   --color-fg-faint: var(--fg-faint);
   --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
   --color-hairline: var(--hairline);
 
-  --font-serif: var(--font-display), Georgia, "Times New Roman", serif;
+  --font-display: var(--font-display-face), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-body-face), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", monospace;
 
   --text-step--1: var(--step--1);
@@ -32,30 +34,20 @@
   :root {
     color-scheme: dark;
   }
-  :root[data-theme="light"] {
-    color-scheme: light;
-  }
 
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
   }
 
   body {
     background: var(--bg);
     color: var(--fg);
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: var(--step-0);
-    line-height: 1.55;
-    transition: background var(--dur-section) var(--ease-house),
-      color var(--dur-section) var(--ease-house);
-  }
-
-  /* The custom cursor takes over on fine-pointer, motion-OK devices. */
-  @media (pointer: fine) {
-    :root:not([data-reduced]) * {
-      cursor: none;
-    }
+    line-height: 1.6;
+    overflow-x: hidden;
   }
 
   ::selection {
@@ -63,7 +55,6 @@
     color: var(--fg);
   }
 
-  /* Designed focus rings — never the browser default. */
   :focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
@@ -75,31 +66,15 @@
     text-decoration: none;
   }
 
+  .font-display {
+    font-family: var(--font-display);
+  }
   .font-mono {
     font-family: var(--font-mono);
   }
 }
 
-/* --- Route transitions via the View Transitions API where supported.
-   Shared elements (wordmark, case-study image) carry view-transition-name
-   inline. Browsers without support simply navigate — graceful fallback. --- */
-@view-transition {
-  navigation: auto;
-}
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.5s;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
-  }
-}
-
-/* --- Animated SVG grain. Single overlay, ~4% opacity, slow 4s drift. --- */
+/* --- Animated SVG film grain. Single fixed overlay, slow drift. --- */
 .grain {
   position: fixed;
   inset: -50%;
@@ -107,7 +82,7 @@
   height: 200%;
   pointer-events: none;
   z-index: var(--z-grain);
-  opacity: 0.04;
+  opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain-drift 4s steps(6) infinite;
   mix-blend-mode: overlay;
@@ -121,144 +96,32 @@
   100% { transform: translate(0, 0); }
 }
 
-/* --- Line-mask reveal primitive (overflow-hidden + translateY from 100%) --- */
-.line-mask {
-  display: block;
-  overflow: hidden;
-}
-.line-mask > span {
-  display: block;
-  transform: translateY(110%);
-}
-
-/* --- Custom cursor --- */
-.cursor-dot,
-.cursor-trail {
+/* --- Soft cinematic vignette around the whole viewport. --- */
+.vignette {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   pointer-events: none;
-  z-index: var(--z-cursor);
-  border-radius: 999px;
-  will-change: transform;
-}
-.cursor-dot {
-  width: 12px;
-  height: 12px;
-  background: var(--accent);
-  display: grid;
-  place-items: center;
-  transition: width var(--dur-micro) var(--ease-house),
-    height var(--dur-micro) var(--ease-house),
-    background var(--dur-micro) var(--ease-house),
-    border-radius var(--dur-micro) var(--ease-house);
-}
-.cursor-trail {
-  width: 12px;
-  height: 12px;
-  background: var(--accent);
-  opacity: 0.3;
-  filter: blur(1px);
-}
-/* difference blend lives only on the default state, against the dark bg */
-.cursor-dot[data-state="default"] {
-  mix-blend-mode: difference;
-}
-:root[data-theme="light"] .cursor-dot[data-state="default"] {
-  mix-blend-mode: normal;
-}
-.cursor-dot[data-state="text"] {
-  width: 2px;
-  height: 22px;
-  border-radius: 1px;
-}
-.cursor-dot[data-state="link"] {
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border: 1px solid var(--accent);
-}
-.cursor-dot[data-state="network"] {
-  width: 24px;
-  height: 24px;
-  background: transparent;
-  border: 1px solid var(--accent);
-}
-.cursor-dot[data-state="network"]::after {
-  content: "";
-  width: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--accent);
-}
-.cursor-dot[data-state="active"] {
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.cursor-label {
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  text-transform: lowercase;
-  color: var(--accent);
-  opacity: 0;
-  transition: opacity var(--dur-micro) var(--ease-house);
-}
-.cursor-dot[data-state="link"] .cursor-label {
-  opacity: 1;
-}
-/* network's persistent trail is too busy at link/network scale */
-.cursor-dot[data-state="link"] ~ .cursor-trail,
-.cursor-dot[data-state="network"] ~ .cursor-trail {
-  opacity: 0;
+  z-index: var(--z-grain);
+  background: radial-gradient(
+    130% 130% at 50% 35%,
+    transparent 55%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
 }
 
-/* Touch tap ripple (replaces the cursor on touch devices). */
-.tap-ripple {
-  position: fixed;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  pointer-events: none;
-  z-index: var(--z-cursor);
-  transform: translate(-50%, -50%);
-  animation: tap 0.32s var(--ease-house) forwards;
-}
-@keyframes tap {
-  from { width: 0; height: 0; opacity: 0.8; }
-  to { width: 80px; height: 80px; opacity: 0; }
-}
-
-/* --- Reduced motion: opacity-only, 240ms. Beautiful, not a stripped apology. --- */
+/* --- Reduced motion: keep it calm, opacity-only. --- */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
     animation-duration: 0.24s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.24s !important;
-    scroll-behavior: auto !important;
   }
   .grain {
     animation: none;
   }
-  .line-mask > span {
-    transform: none;
-  }
-}
-
-/* The /reduced-motion-preview route forces the same baseline via data-reduced. */
-:root[data-reduced] *,
-:root[data-reduced] *::before,
-:root[data-reduced] *::after {
-  animation-duration: 0.24s !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.24s !important;
-  scroll-behavior: auto !important;
-}
-:root[data-reduced] .grain {
-  animation: none;
-}
-:root[data-reduced] .line-mask > span {
-  transform: none !important;
 }
